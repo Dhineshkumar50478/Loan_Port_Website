@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import open_account from "../assets/open_account.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
-import toast, {Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
@@ -27,6 +27,17 @@ function Register() {
   });
 
   const [errors, setErrors] = useState({});
+  const [isRentDisabled, setIsRentDisabled] = useState(false); // Track whether Rent Amount is disabled
+  const navigate = useNavigate();
+
+  // UseEffect to monitor changes in Residential Status
+  useEffect(() => {
+    if (eli_values.Residential_Status === "Owned") {
+      setIsRentDisabled(true); // Disable Rent Amount if "Owned"
+    } else {
+      setIsRentDisabled(false); // Enable Rent Amount if "Rent"
+    }
+  }, [eli_values.Residential_Status]);
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -58,38 +69,36 @@ function Register() {
         newErrors[key] = `${key.replace(/_/g, " ")} is required`;
       }
     });
-  
+
     // Password validation
     if (eli_values.Password && eli_values.Password.length < 8) {
       newErrors.Password = "Password must be at least 8 characters";
     }
-  
+
     return newErrors;
   };
-  
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-  
+
     const toastId = toast.loading("Submitting profile...", {
       style: { background: "#facc15", color: "black" }, // yellow-500
     });
-  
+
     try {
       await axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/profile_completion", { eli_values });
-  
+
       toast.dismiss(toastId);
       toast.success("Profile registered successfully!", {
         style: { background: "#4ade80", color: "black" }, // green-400
       });
-  
+
       // Navigate to Sign In page after short delay
       setTimeout(() => {
         navigate("/login");
@@ -122,7 +131,7 @@ function Register() {
       {/* Right */}
       <div className="w-full md:w-3/4 bg-white p-6 md:p-10 rounded-2xl shadow-2xl border border-blue-100 mt-6 md:mt-0">
         <h2 className="text-3xl font-bold text-yellow-500 mb-10 text-center">
-        Build Your Profile
+          Build Your Profile
         </h2>
 
         <form onSubmit={handleSubmit}>
@@ -139,11 +148,20 @@ function Register() {
             </div>
 
             {/* RIGHT */}
+            
             <div className="space-y-4">
               <FormSelect label="Employment Status" name="Employment_Status" value={eli_values.Employment_Status} onChange={handleChange} options={["Employed", "Not Employed", "Student"]} error={errors.Employment_Status} />
               <FormInput label="Monthly Income" name="Total_Income" type="number" placeholder="Enter total monthly income" value={eli_values.Total_Income} onChange={handleChange} error={errors.Total_Income} />
               <FormSelect label="Residential Status" name="Residential_Status" value={eli_values.Residential_Status} onChange={handleChange} options={["Rent", "Owned"]} error={errors.Residential_Status} />
-              <FormInput label="Rent Amount Per Month" name="Rent_Amount" type="number" placeholder="Enter rent if applicable else put 0" value={eli_values.Rent_Amount} onChange={handleChange} error={errors.Rent_Amount} />
+             {!isRentDisabled && <FormInput
+                label="Rent Amount Per Month"
+                name="Rent_Amount"
+                type="number"
+                placeholder="Enter rent if applicable else put 0"
+                value={eli_values.Rent_Amount}
+                onChange={handleChange}
+                error={errors.Rent_Amount}
+              />}
               <FormInput label="CIBIL Score" name="Cibil_Score" type="number" placeholder="Score out of 900" value={eli_values.Cibil_Score} onChange={handleChange} error={errors.Cibil_Score} />
               <FormInput label="Email ID" name="Email" type="email" placeholder="you@example.com" value={eli_values.Email} onChange={handleChange} error={errors.Email} />
               <FormInput label="Contact No" name="Contact_No" type="number" placeholder="Enter mobile number" value={eli_values.Contact_No} onChange={handleChange} error={errors.Contact_No} />
@@ -170,7 +188,8 @@ function Register() {
             className="mt-8 w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-lg shadow-md transition duration-300"
           >
             Submit
-          </button><Toaster/>
+          </button>
+          <Toaster />
         </form>
       </div>
     </div>
@@ -178,7 +197,7 @@ function Register() {
 }
 
 // Reusable Input Component
-const FormInput = ({ label, name, type = "text", placeholder = "", value, onChange, error }) => (
+const FormInput = ({ label, name, type = "text", placeholder = "", value, onChange, error, disabled }) => (
   <div>
     <label className="block font-medium text-gray-700 mb-1">{label}:</label>
     <input
@@ -187,6 +206,7 @@ const FormInput = ({ label, name, type = "text", placeholder = "", value, onChan
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      disabled={disabled}
       className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 transition ${error ? "border-red-500 ring-red-300" : "focus:ring-blue-600"}`}
     />
     {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
@@ -203,10 +223,10 @@ const FormSelect = ({ label, name, value, onChange, options, error }) => (
       onChange={onChange}
       className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 transition ${error ? "border-red-500 ring-red-300" : "focus:ring-blue-600"}`}
     >
-      <option value="">Select</option>
-      {options.map((opt) => (
-        <option key={opt} value={opt}>
-          {opt}
+      <option value="">Select {label}</option>
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
         </option>
       ))}
     </select>
