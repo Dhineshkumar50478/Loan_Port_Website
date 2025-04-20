@@ -1,0 +1,98 @@
+/* SplashScreen.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+.splash-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #2563eb; /* Tailwind's blue-600 */
+  flex-direction: column;
+  font-family: 'Rubik', sans-serif;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.logo-box {
+  text-align: center;
+}
+
+.logo-text {
+  font-size: 3.5rem;
+  font-weight: bold;
+  animation: bounceIn 1.2s ease forwards;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.logo-letter {
+  font-family: 'Viner Hand ITC', cursive;
+  color: #facc15; /* Tailwind yellow-500 */
+}
+
+.logo-word {
+  font-family: 'Bell MT', serif;
+  color: #ffffff;
+}
+
+.slogan-box {
+  margin-top: 1.5rem;
+}
+
+.slogan {
+  font-size: 1.2rem;
+  color: #fff;
+  opacity: 0;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.animate-slide-up {
+  animation: slideUp 1s ease forwards;
+}
+
+.delay-1 {
+  animation-delay: 1s;
+}
+
+.delay-2 {
+  animation-delay: 2s;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 1s ease-in-out;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
