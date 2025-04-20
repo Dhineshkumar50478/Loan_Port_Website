@@ -147,6 +147,14 @@ const Nav = () => {
                 Contact
               </Link>
             </li>
+            <li>
+              <Link
+                to="/home/Faq"
+                className="text-white font-medium !no-underline"
+              >
+                Faq's
+              </Link>
+            </li>
             {/* Conditionally show Login/Profile button */}
             {isLoggedIn ? (
               <li>
@@ -180,10 +188,18 @@ const Nav = () => {
         {/* Mobile Menu */}
         {isOpen && (
           <ul className="flex flex-col items-start space-y-4 px-4 pb-4 text-lg md:hidden">
-            <li className="cursor-pointer">Home</li>
-            <li className="cursor-pointer">About Us</li>
-            <li className="cursor-pointer">Contact</li>
-            <li className="cursor-pointer">FAQ's</li>
+            <li className="cursor-pointer">
+            <Link to="/home">Home</Link>
+            </li>
+            <li className="cursor-pointer">
+            <Link to="/home/about">About Us</Link>
+            </li>
+            <li className="cursor-pointer">
+            <Link to="/home/contact">Contact</Link>
+            </li>
+            <li className="cursor-pointer">
+            <Link to="/home/Faq">FAQ's</Link>
+            </li>
             {/* Conditionally show Login/Profile button */}
             {isLoggedIn ? (
               <li className="cursor-pointer">

@@ -11,6 +11,7 @@ import SubmitDocuments from './SubmitDocuments'
 import Profile from './Profile'
 import Viewprofile from './Viewprofile'
 import LandingPage from './LandingPage'
+import Faqs from "./Faqs"
 
 const Router = () => {
   return (
@@ -23,6 +24,7 @@ const Router = () => {
     <Route path="/home/about" element={<About />} />
     <Route path="/home/contact" element={<Contact />} />
     <Route path="/home/logout" element={<LandingPage />} />
+    <Route path='/home/Faq' element={<Faqs/>}/>
   </Route>
 
   <Route path="/login" element={<SignIn />} />
