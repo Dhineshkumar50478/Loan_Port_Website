@@ -14,38 +14,43 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const [loan_data, setLoan_data] = useState({
-    user_id:"",
-    loan_type:"",
-    loan_amount:0,
-    loan_term:0,
-    existing_emi:0,
-  })
+    user_id: "",
+    loan_type: "",
+    loan_amount: 0,
+    loan_term: 0,
+    existing_emi: 0,
+  });
 
   const loan_types = [
     {
       title: "Home Loan",
       description: "Make your dream home a reality.",
       image: home_loan,
+      in_rate:'8.75%',
     },
     {
       title: "Education Loan",
       description: "Empowering your academic journey.",
       image: education_loan,
+      in_rate:'9.5%',
     },
     {
       title: "Vehicle Loan",
       description: "Drive your dream vehicle with ease.",
       image: vehicle_loan,
+      in_rate:'9.25%',
     },
     {
       title: "Personal Loan",
       description: "For your urgent personal needs.",
       image: personal_loan,
+      in_rate:'12.5%',
     },
     {
       title: "Gold Loan",
       description: "Unlock the value of your gold instantly.",
       image: gold_loan,
+      in_rate:'9%',
     },
   ];
 
@@ -88,81 +93,94 @@ const HomePage = () => {
     },
   ];
 
+  const loan_data_transfer = async () => {
+    toast.dismiss(); // Clear any old toasts
 
-const loan_data_transfer = async () => {
-  toast.dismiss(); // Clear any old toasts
-
-  // Show loading toast immediately
-  const toastId = toast.loading("Checking eligibility...", {
-    style: { backgroundColor: "#facc15", color: "#000" },
-  });
-
-  setLoading(true); // Show spinner in button
-
-  try {
-    console.log(loan_data);
-
-    // Step 1: Store loan data
-    await axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/update_loan", loan_data);
-
-    // Step 2: Fetch complete user profile
-    const res = await axios.get(`https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/get_user/${loan_data.user_id}`);
-    const fullProfile = res.data;
-
-    // Step 3: Filter values
-    const { user_id, _id, __v, Address, Contact_No, DOB, Name, Loan_Type, Email, ...eli_values } = fullProfile;
-
-    console.log(eli_values);
-
-    // Step 4: Call eligibility check with toastId
-    checkEligiblity(eli_values, user_id, toastId);
-
-  } catch (error) {
-    console.error("Error during loan data transfer or eligibility check:", error);
-    toast.error("Something went wrong. Please try again!", {
-      id: toastId,
-      style: { backgroundColor: "#f87171", color: "#fff" },
+    // Show loading toast immediately
+    const toastId = toast.loading("Checking eligibility...", {
+      style: { backgroundColor: "#facc15", color: "#000" },
     });
-    setLoading(false);
-  }
-};
 
-  
-    const [response, setResponse] = useState(null);
-    const [loading, setLoading] = useState(false);
+    setLoading(true); // Show spinner in button
 
-    const checkEligiblity = async (eli_values, user_id, toastId) => {
-      try {
-        const res = await axios.post(
-          "https://loan-backendpy.onrender.com/api/predict",
-          eli_values
-        );
-        setResponse(res.data);
-    
-        if (res.data.status === "Approved") {
-          toast.success("🎉 You are Eligible", {
-            id: toastId,
-            style: { backgroundColor: "#4ade80", color: "#000" },
-          });
-          navigate("/documentsub", { state: { user_id } });
-        } else if (res.data.status === "Rejected") {
-          const reasons = res.data.reasons?.join("\n ") || "Unknown reason";
-          toast.error(`❌ You're not eligible.\n${reasons}`, {
-            id: toastId,
-            style: { backgroundColor: "#f87171", color: "#fff" },
-          });
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        toast.error("Eligibility check failed!", {
+    try {
+      console.log(loan_data);
+
+      // Step 1: Store loan data
+      await axios.post("http://localhost:8000/update_loan", loan_data);
+
+      // Step 2: Fetch complete user profile
+      const res = await axios.get(
+        `http://localhost:8000/get_user/${loan_data.user_id}`
+      );
+      const fullProfile = res.data;
+
+      // Step 3: Filter values
+      const {
+        user_id,
+        _id,
+        __v,
+        Address,
+        Contact_No,
+        DOB,
+        Name,
+        Email,
+        ...eli_values
+      } = fullProfile;
+
+      console.log("elivalues",eli_values);
+
+      // Step 4: Call eligibility check with toastId
+      checkEligiblity(eli_values, user_id, toastId);
+    } catch (error) {
+      console.error(
+        "Error during loan data transfer or eligibility check:",
+        error
+      );
+      toast.error("Something went wrong. Please try again!", {
+        id: toastId,
+        style: { backgroundColor: "#f87171", color: "#fff" },
+      });
+      setLoading(false);
+    }
+  };
+
+  const [response, setResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const checkEligiblity = async (eli_values, user_id, toastId) => {
+    try {
+      const res = await axios.post(
+        "https://loan-backendpy.onrender.com/api/predict",
+        eli_values
+      );
+      setResponse(res.data);
+      
+      var loan_emi = res.data.loan_emi;
+
+      if (res.data.status === "Approved") {
+        toast.success('🎉 You are Eligible', {
+          id: toastId,
+          style: { backgroundColor: "#4ade80", color: "#000" },
+        });
+        navigate("/documentsub", { state: { user_id,loan_emi } });
+      } else if (res.data.status === "Rejected") {
+        const reasons = res.data.reasons?.join("\n ") || "Unknown reason";
+        toast.error(`❌ You're not eligible.\n${reasons}`, {
           id: toastId,
           style: { backgroundColor: "#f87171", color: "#fff" },
         });
-      } finally {
-        setLoading(false); // Stop button spinner
       }
-    };
-    
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Eligibility check failed!", {
+        id: toastId,
+        style: { backgroundColor: "#f87171", color: "#fff" },
+      });
+    } finally {
+      setLoading(false); // Stop button spinner
+    }
+  };
 
   const firstEligibility = () => {
     console.log("Toast is fine");
@@ -199,7 +217,7 @@ const loan_data_transfer = async () => {
                 </div>
               )}
             </div>
-          )} 
+          )}
         </div>
 
         {/* Right Side - Form */}
@@ -223,7 +241,7 @@ const loan_data_transfer = async () => {
                 type="text"
                 className="w-full border border-gray-300 rounded px-3 py-2"
                 onChange={(e) =>
-                  setLoan_data({ ...loan_data, user_id: e.target.value})
+                  setLoan_data({ ...loan_data, user_id: e.target.value })
                 }
                 required
               />
@@ -258,7 +276,10 @@ const loan_data_transfer = async () => {
                 max="1000000"
                 className="w-full border border-gray-300 rounded px-3 py-2"
                 onChange={(e) =>
-                  setLoan_data({ ...loan_data, loan_amount: Number(e.target.value) })
+                  setLoan_data({
+                    ...loan_data,
+                    loan_amount: Number(e.target.value),
+                  })
                 }
                 required
                 onInvalid={(e) =>
@@ -274,11 +295,19 @@ const loan_data_transfer = async () => {
               </label>
               <input
                 type="number"
+                max="100"
                 className="w-full border border-gray-300 rounded px-3 py-2"
                 onChange={(e) =>
-                  setLoan_data({ ...loan_data, loan_term: Number(e.target.value) })
+                  setLoan_data({
+                    ...loan_data,
+                    loan_term: Number(e.target.value),
+                  })
                 }
                 required
+                onInvalid={(e) =>
+                  e.target.setCustomValidity("Loan Tenure is Maximum 100 Months")
+                }
+                onInput={(e) => e.target.setCustomValidity("")}
               />
             </div>
 
@@ -290,46 +319,50 @@ const loan_data_transfer = async () => {
                 type="number"
                 className="w-full border border-gray-300 rounded px-3 py-2"
                 onChange={(e) =>
-                  setLoan_data({ ...loan_data, existing_emi: Number(e.target.value) })
+                  setLoan_data({
+                    ...loan_data,
+                    existing_emi: Number(e.target.value),
+                  })
                 }
               />
             </div>
 
             <div className="text-center my-6">
               <center>
-              <button
-                type="submit"
-                className="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 cursor-pointer transition flex items-center justify-center gap-2"
-                disabled={loading}
-              >
-                {loading ? (
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v8H4z"
-                    />
-                  </svg>
-                ) : (
-                  "Check Eligibility"
-                )}
-              </button></center>
+                <button
+                  type="submit"
+                  className="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 cursor-pointer transition flex items-center justify-center gap-2"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                      />
+                    </svg>
+                  ) : (
+                    "Check Eligibility"
+                  )}
+                </button>
+              </center>
             </div>
           </form>
         </div>
       </div>
-      
+
       {/* loan types section */}
       <div className="p-4">
         <p className="text-2xl font-bold text-center text-blue-600 mb-2">
@@ -363,13 +396,13 @@ const loan_data_transfer = async () => {
                   <img
                     src={i.image}
                     alt={i.title}
-                    className="w-28 h-28 object-contain"
+                    className="w-28 h-26 object-contain"
                   />
                 </div>
                 <h3 className="text-2xl font-semibold text-blue-600">
                   {i.title}
                 </h3>
-                <p className="text-gray-600 text-sm">{i.description}</p>
+                <p className="text-gray-600 text-sm"><span className="text-red-600 font-bold">Base Interest Rate is {i.in_rate}</span><br/>{i.description}</p>
                 <button
                   className="mt-auto px-6 py-2.5 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600 transition duration-300"
                   onClick={() => {

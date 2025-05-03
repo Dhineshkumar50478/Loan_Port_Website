@@ -42,7 +42,7 @@ const ViewProfile = () => {
     setLoading(true);
   
     setTimeout(() => {
-      axios.get(`https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/get_user/${userId}`)
+      axios.get(`http://localhost:8000/get_user/${userId}`)
         .then((res) => {
           if (res.data) {
             setProfile(res.data);
@@ -114,7 +114,7 @@ const ViewProfile = () => {
     });
 
     try {
-      await axios.put("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/update_profile", editedProfile);
+      await axios.put("http://localhost:8000/update_profile", editedProfile);
       toast.success("Profile saved successfully!", {
         id: toastId, // Ensure only this toast ID is used
         style: { backgroundColor: "#facc15", color: "#000" },
@@ -237,6 +237,8 @@ const ViewProfile = () => {
                     "Existing_EMI",
                     "Loan_Type",
                     "Password",
+                    "Loan_Status",
+                    "Loan_Emi",
                   ].includes(key)
                 )
                   return null;

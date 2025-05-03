@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import documentupload from "../assets/document_up.png";
 import { useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-
+import axios from 'axios';
 
 export default function DocumentUploadCard() {
   const [aadhar, setAadhar] = useState(null);
@@ -16,7 +16,8 @@ export default function DocumentUploadCard() {
 
   const location = useLocation();
   const user_id = location.state?.user_id;
-  console.log(user_id);
+  const emi = location.state?.loan_emi;
+  console.log(user_id,emi);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,10 +41,24 @@ export default function DocumentUploadCard() {
       const toastId = toast.loading("📤 Uploading your documents...");
   
       try {
-        await fetch("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/upload_documents", {
+        await fetch("http://localhost:8000/upload_documents", {
           method: "POST",
           body: formData,
         });
+
+        // await fetch("http://localhost:8000/update_loan_status", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     user_id: user_id,
+        //     loan_emi: emi,
+        //   }),
+        // });
+
+        axios.post("http://localhost:8000/update_loan_status",{user_id,emi})
+        
   
         toast.success("Documents uploaded successfully!", {
           id: toastId,
@@ -88,9 +103,16 @@ export default function DocumentUploadCard() {
         <div className="p-6 md:p-10">
           <div className="mb-6 p-4 bg-green-100 border border-green-400 rounded-md text-center">
             <h3 className="text-lg md:text-xl font-semibold text-green-700">
-              🎉 Congratulations! You are eligible to apply for a loan
+              🎉 Congratulations! You are eligible to apply for a Loan
             </h3>
           </div>
+          <div className="mb-6 p-4 bg-red-100 border border-red-400 rounded-md text-center">
+  <h3 className="text-lg md:text-xl font-semibold text-red-700">
+    Monthly EMI: ₹ {emi}.
+  </h3>
+  <p>If this is acceptable, Please Continue</p>
+</div>
+          
           <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-blue-600 mb-4 text-center">
             Upload Your Documents
           </h2>
