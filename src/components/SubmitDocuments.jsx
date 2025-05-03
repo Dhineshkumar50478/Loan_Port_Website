@@ -41,12 +41,12 @@ export default function DocumentUploadCard() {
       const toastId = toast.loading("📤 Uploading your documents...");
   
       try {
-        await fetch("http://localhost:8000/upload_documents", {
+        await fetch("https://loan-fy-server.vercel.app/upload_documents", {
           method: "POST",
           body: formData,
         });
 
-        // await fetch("http://localhost:8000/update_loan_status", {
+        // await fetch("https://loan-fy-server.vercel.app/update_loan_status", {
         //   method: "POST",
         //   headers: {
         //     "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function DocumentUploadCard() {
         //   }),
         // });
 
-        axios.post("http://localhost:8000/update_loan_status",{user_id,emi})
+        axios.post("https://loan-fy-server.vercel.app/update_loan_status",{user_id,emi})
         
   
         toast.success("Documents uploaded successfully!", {

@@ -1,93 +1,3 @@
-// import React, { useState } from "react";
-// import Logo from "../assets/logo.png";
-// import { NavLink } from "react-router-dom";
-// import { MdMenu, MdClose } from "react-icons/md"; // Combined imports
-
-// const Nav = () => {
-//   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-//   // Toggle mobile menu
-//   const toggleMobileMenu = () => {
-//     setIsMobileMenuOpen(!isMobileMenuOpen);
-//   };
-
-//   return (
-//     <nav className="bg-slate-900 p-4 shadow-lg">
-//       <div className="container mx-auto flex items-center justify-between">
-//         <NavLink to="/home" className="flex items-center hover:animate-pulse">
-//           <img src={Logo} alt="Loan Ease Logo" className="h-12 w-auto" />
-//         </NavLink>
-
-//         {/* Navigation Links for desktop */}
-//         <div className="hidden md:flex space-x-6 text-lg">
-//           {[
-//             { to: "/home", label: "Home" },
-//             { to: "/about", label: "About Us" },
-//             { to: "/faqs", label: "FAQs" },
-//             { to: "/logout", label: "Logout" },
-//           ].map((link, index) => (
-//             <NavLink
-//               key={index}
-//               to={link.to}
-//               className={({ isActive }) =>
-//                 `no-underline text-cyan-200 hover:text-gray-300 transition-colors duration-200 ${
-//                   isActive ? "no-underline text-white font-semibold" : "text-cyan-200"
-//                 }`
-//               }
-
-//             >
-//               {link.label}
-//             </NavLink>
-//           ))}
-//         </div>
-
-//         {/* Mobile Menu Button */}
-//         <button
-//           className="md:hidden text-black focus:outline-none"
-//           onClick={toggleMobileMenu}
-//         >
-//           <MdMenu className="text-cyan-500 text-2xl" />
-//         </button>
-//       </div>
-
-//       {/* Mobile Menu */}
-//       {isMobileMenuOpen && (
-//         <div className="md:hidden bg-slate-800 p-4 absolute top-16 left-0 w-full">
-//           <button
-//             className="absolute top-4 right-4 text-cyan-500"
-//             onClick={toggleMobileMenu}
-//           >
-//             <MdClose className="text-3xl" />
-//           </button>
-//           <div className="flex flex-col space-y-4 text-lg">
-//             {[
-//               { to: "/home", label: "Home" },
-//               { to: "/about", label: "About Us" },
-//               { to: "/faqs", label: "FAQs" },
-//               { to: "/logout", label: "Logout" },
-//             ].map((link, index) => (
-//               <NavLink
-//                 key={index}
-//                 to={link.to}
-//                 className={({ isActive }) =>
-//                   `text-cyan-200 hover:text-gray-300 transition-colors duration-200 ${
-//                     isActive ? "text-white font-semibold" : "text-cyan-200"
-//                   }`
-//                 }
-//                 onClick={toggleMobileMenu}
-//               >
-//                 {link.label}
-//               </NavLink>
-//             ))}
-//           </div>
-//         </div>
-//       )}
-//     </nav>
-//   );
-// };
-
-// export default Nav;
-
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -133,7 +43,7 @@ const Nav = () => {
             </li>
             <li>
               <Link
-                to="/home/about"
+                to="about"
                 className="text-white font-medium !no-underline"
               >
                 About Us
@@ -141,18 +51,10 @@ const Nav = () => {
             </li>
             <li>
               <Link
-                to="/home/contact"
+                to="contact"
                 className="text-white font-medium !no-underline"
               >
                 Contact
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/home/Faq"
-                className="text-white font-medium !no-underline"
-              >
-                Faq's
               </Link>
             </li>
             {/* Conditionally show Login/Profile button */}
@@ -192,13 +94,10 @@ const Nav = () => {
             <Link to="/home">Home</Link>
             </li>
             <li className="cursor-pointer">
-            <Link to="/home/about">About Us</Link>
+            <Link to="about">About Us</Link>
             </li>
             <li className="cursor-pointer">
-            <Link to="/home/contact">Contact</Link>
-            </li>
-            <li className="cursor-pointer">
-            <Link to="/home/Faq">FAQ's</Link>
+            <Link to="contact">Contact</Link>
             </li>
             {/* Conditionally show Login/Profile button */}
             {isLoggedIn ? (
@@ -207,7 +106,7 @@ const Nav = () => {
               </li>
             ) : (
               <li className="cursor-pointer">
-                <Link to="/login">Login</Link>
+                <Link to="/login">Login</Link>   
               </li>
             )}
           </ul>

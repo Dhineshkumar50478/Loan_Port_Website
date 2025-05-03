@@ -11,7 +11,7 @@ import SubmitDocuments from './SubmitDocuments'
 import Profile from './Profile'
 import Viewprofile from './Viewprofile'
 import LandingPage from './LandingPage'
-import Faqs from "./Faqs"
+import Admin from './Admin'
 
 const Router = () => {
   return (
@@ -21,10 +21,9 @@ const Router = () => {
 
   <Route path="/home" element={<Layout />}>
     <Route index element={<Home />} />
-    <Route path="/home/about" element={<About />} />
-    <Route path="/home/contact" element={<Contact />} />
-    <Route path="/home/logout" element={<LandingPage />} />
-    <Route path='/home/Faq' element={<Faqs/>}/>
+    <Route path="about" element={<About />} />
+    <Route path="contact" element={<Contact />} />
+    <Route path="logout" element={<LandingPage />} />
   </Route>
 
   <Route path="/login" element={<SignIn />} />
@@ -33,6 +32,7 @@ const Router = () => {
   <Route path="/documentsub" element={<SubmitDocuments />} />
   <Route path="/create-profile" element={<Profile />} />
   <Route path="/view-profile" element={<Viewprofile />} />
+  <Route path="/admin" element={<Admin/>}/>
 </Routes>
         
     </>

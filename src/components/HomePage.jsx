@@ -107,11 +107,11 @@ const HomePage = () => {
       console.log(loan_data);
 
       // Step 1: Store loan data
-      await axios.post("http://localhost:8000/update_loan", loan_data);
+      await axios.post("https://loan-fy-server.vercel.app/update_loan", loan_data);
 
       // Step 2: Fetch complete user profile
       const res = await axios.get(
-        `http://localhost:8000/get_user/${loan_data.user_id}`
+        `https://loan-fy-server.vercel.app/get_user/${loan_data.user_id}`
       );
       const fullProfile = res.data;
 
