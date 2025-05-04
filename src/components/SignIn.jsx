@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import toast, {Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function SignInPage() {
   const [values, setValues] = useState({
@@ -16,28 +16,28 @@ export default function SignInPage() {
 
   async function signinvalidate(e) {
     e.preventDefault();
-  
+
     const toastId = toast.loading("Signing in...", {
       style: { background: "#facc15", color: "black" }, // yellow-500
     });
-  
+
     try {
-      const res = await axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/signin", {//https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/signin
+      const res = await axios.post("http://localhost:8000/signin", {
         userid: values.userid,
         password: values.password,
       });
-  
+
       toast.dismiss(toastId);
-      console.log(res.data.status);
-  
-      if (res.data.status === "success") {
-        localStorage.setItem("userId", values.userid);
-        Cookies.set("userId", values.userid, { expires: 7 });
-  
+      console.log(res.data.userid);
+
+      if (res.data.message === "Login successful") {
+        localStorage.setItem("userId", res.data.userid);
+        Cookies.set("userId", res.data.userid, { expires: 7 });
+
         toast.success("Signed in successfully!", {
           style: { background: "#4ade80", color: "black" }, // green-400
         });
-  
+
         setTimeout(() => {
           Navigate("/home");
         }, 1500); // short delay to let user see the toast
@@ -55,7 +55,7 @@ export default function SignInPage() {
     }
   }
 
-   return (
+  return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-indigo-500 p-4">
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
         {/* Left Side - Just the Image */}
@@ -73,7 +73,9 @@ export default function SignInPage() {
             <h2 className="text-2xl font-semibold text-blue-600 mb-1">
               Welcome Back 👋
             </h2>
-            <p className="animate-pulse text-red-500">Check your email for your User ID</p>
+            <p className="animate-pulse text-red-500">
+              Check your email for your User ID
+            </p>
           </div>
 
           <form className="space-y-4" onSubmit={signinvalidate}>
@@ -117,27 +119,41 @@ export default function SignInPage() {
               />
             </div>
 
-            <div className="flex justify-center items-center text-sm text-gray-600">
+            {/* <div className="flex justify-center items-center text-sm text-gray-600">
               <Link to="/forgotpw" className="text-blue-500 !no-underline">
                 Forgot password?
               </Link>
-            </div>
+            </div> */}
 
             <button
               type="submit"
               className="w-full bg-yellow-500 text-white py-2 rounded-full hover:bg-yellow-600 font-semibold transition"
             >
               Sign In
-            </button><Toaster/>
+            </button>
+            <Toaster />
           </form>
-          
 
-          <p className="text-center text-sm text-gray-600 mt-4">
-            First time here?{" "}
-            <Link to="/register" className="text-blue-500 !no-underline">
-              Register
-            </Link>
-          </p>
+          <div className="mt-2 space-y-2 text-center text-sm text-gray-600">
+            <p>
+              Don’t have an account?{" "}
+              <Link
+                to="/register"
+                className="text-blue-600 font-medium hover:underline"
+              >
+                Create one here
+              </Link>
+            </p>
+            <p>
+              Are you an admin?{" "}
+              <Link
+                to="/adminlogin"
+                className="text-blue-600 font-medium hover:underline"
+              >
+                Login as Admin
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

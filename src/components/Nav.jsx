@@ -61,7 +61,7 @@ const Nav = () => {
             {isLoggedIn ? (
               <li>
                 <Link
-                  to="/view-profile"
+                  to="/profile"
                   className="text-white font-medium !no-underline"
                 >
                   Profile
