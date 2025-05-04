@@ -23,7 +23,7 @@ export default function AdminLogin() {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:8000/api/admin/send-otp", { email });
+      await axios.post("https://loan-fy-server.vercel.app/api/admin/send-otp", { email });
       setOtpSent(true);
       toast.success("OTP sent to admin email!", {
         style: { background: "#4ade80", color: "black" },
@@ -41,7 +41,7 @@ export default function AdminLogin() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:8000/api/admin/verify-otp", {
+      const res = await axios.post("https://loan-fy-server.vercel.app/api/admin/verify-otp", {
         email,
         otp,
       });
