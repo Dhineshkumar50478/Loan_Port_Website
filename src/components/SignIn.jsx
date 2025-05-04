@@ -22,7 +22,7 @@ export default function SignInPage() {
     });
 
     try {
-      const res = await axios.post("http://localhost:8000/signin", {
+      const res = await axios.post("https://loan-fy-server.vercel.app/signin", {
         userid: values.userid,
         password: values.password,
       });
