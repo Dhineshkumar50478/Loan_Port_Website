@@ -8,7 +8,7 @@ import Register from './Register';
 import Forgotpw from './Forgotpw';
 import Contact from './Contact';
 import SubmitDocuments from './SubmitDocuments';
-import Profile from './Profile';
+import ViewProfile from './Viewprofile';
 import Viewprofile from './Viewprofile';
 import LandingPage from './LandingPage';
 import Admin from './Admin';
@@ -42,7 +42,7 @@ const Router = () => {
         path="/profile"
         element={
           <ProtectedRoute>
-            <Profile />
+            <ViewProfile />
           </ProtectedRoute>
         }
       />
