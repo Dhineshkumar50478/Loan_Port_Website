@@ -23,7 +23,7 @@ export default function Contact() {
       style: { background: "#facc15", color: "black" }, // yellow-500
     });
   
-    axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/contact-msg", contactmsg)
+    axios.post("http://localhost:8000/contact-msg", contactmsg)
       .then(() => {
         toast.dismiss(toastId);
         toast.success("Message sent successfully!", {

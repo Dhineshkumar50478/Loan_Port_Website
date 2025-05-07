@@ -63,7 +63,7 @@ const Admin = () => {
   const [totalAccounts, setTotalAccounts] = useState(0);
 
   useEffect(() => {
-    axios.get("https://loan-fy-server.vercel.app/api/loan-stats")
+    axios.get("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/api/loan-stats")
       .then((res) => {
         setTotalAccounts(res.data.totalAccounts);
         setLoanStats(res.data.stats);
@@ -75,7 +75,7 @@ const Admin = () => {
 
   const fetchLoanData = async (status) => {
     try {
-      const response = await axios.get(`https://loan-fy-server.vercel.app/api/profiles`, {
+      const response = await axios.get(`https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/api/profiles`, {
         params: { status },
       });
       if (status === "Pending") setPendingData(response.data);
@@ -88,7 +88,7 @@ const Admin = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axios.put(`https://loan-fy-server.vercel.app/api/profiles/${id}`, {
+      await axios.put(`https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/api/profiles/${id}`, {
         Loan_Status: newStatus,
       });
       // Refresh data

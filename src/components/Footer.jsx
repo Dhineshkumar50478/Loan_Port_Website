@@ -25,10 +25,10 @@ const Footer = () => {
               <NavLink to="/home" className="hover:text-yellow-500 font-medium">Home</NavLink>
             </li>
             <li>
-              <NavLink to="/about" className="hover:text-yellow-500 font-medium">About Us</NavLink>
+              <NavLink to="about" className="hover:text-yellow-500 font-medium">About Us</NavLink>
             </li>
             <li>
-              <NavLink to="/contact" className="hover:text-yellow-500 font-medium">Contact</NavLink>
+              <NavLink to="contact" className="hover:text-yellow-500 font-medium">Contact</NavLink>
             </li>
           </ul>
         </div>
@@ -37,9 +37,9 @@ const Footer = () => {
         <div className="flex flex-col sm:items-end gap-2">
           <span className="text-yellow-500 font-semibold">Let's Connect With Us</span>
           <ul className="flex flex-col sm:flex-row gap-2 sm:gap-6">
-            <li><a href="#" className="hover:text-yellow-500 font-medium">Instagram</a></li>
-            <li><a href="#" className="hover:text-yellow-500 font-medium">Facebook</a></li>
-            <li><a href="#" className="hover:text-yellow-500 font-medium">Twitter</a></li>
+            <li><a href="https://www.instagram.com/loanport59/" className="hover:text-yellow-500 font-medium">Instagram</a></li>
+            <li><a href="https://www.facebook.com/profile.php?id=61575780941790" className="hover:text-yellow-500 font-medium">Facebook</a></li>
+            <li><a href="https://x.com/Loanease112016" className="hover:text-yellow-500 font-medium">Twitter</a></li>
           </ul>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import forgotpw from "../assets/forgotpw.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,8 @@ export default function ForgotPasswordPage() {
   const [step, setStep] = useState(1); // 1: Send OTP, 2: Verify OTP, 3: Reset Password
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const showMessage = (msg) => {
     setMessage(msg);
@@ -20,7 +23,9 @@ export default function ForgotPasswordPage() {
   const handleSendOtp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/send-otp", { email });
+      const res = await axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/api/otp/send-otp", {
+        email,
+      });
       showMessage(res.data.message || "OTP sent successfully!");
       setStep(2);
     } catch (err) {
@@ -31,7 +36,10 @@ export default function ForgotPasswordPage() {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/verify-otp", { email, otp });
+      const res = await axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/api/otp/verify-otp", {
+        email,
+        otp,
+      });
       showMessage(res.data.message || "OTP verified successfully!");
       setStep(3);
     } catch (err) {
@@ -48,16 +56,21 @@ export default function ForgotPasswordPage() {
     }
 
     try {
-      const res = await axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/update-password", {
-        email,
-        newPassword,
-      });
+      const res = await axios.post(
+        "https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/api/otp/updatePassword",
+        {
+          email,
+          newPassword,
+        }
+      );
 
       showMessage(res.data.message || "Password reset successful!");
 
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      showMessage(err.response?.data?.message || "Something went wrong. Please try again.");
+      showMessage(
+        err.response?.data?.message || "Something went wrong. Please try again."
+      );
     }
   };
 
@@ -66,7 +79,11 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
         {/* Left Side Image */}
         <div className="md:w-1/2 w-full">
-          <img src={forgotpw} alt="Forgot Password" className="w-full h-full object-cover" />
+          <img
+            src={forgotpw}
+            alt="Forgot Password"
+            className="w-full h-full object-cover"
+          />
         </div>
 
         {/* Right Side Form */}
@@ -81,81 +98,105 @@ export default function ForgotPasswordPage() {
             </div>
           )}
 
-<form
-  className="space-y-4"
-  onSubmit={
-    step === 1
-      ? handleSendOtp
-      : step === 2
-      ? handleVerifyOtp
-      : handleResetPassword
-  }
->
-  {step === 1 && (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-      <input
-        type="email"
-        placeholder="you@example.com"
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-    </div>
-  )}
+          <form
+            className="space-y-4"
+            onSubmit={
+              step === 1
+                ? handleSendOtp
+                : step === 2
+                ? handleVerifyOtp
+                : handleResetPassword
+            }
+          >
+            {step === 1 && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+            )}
 
-  {step === 2 && (
-    <>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Enter OTP</label>
-        <input
-          type="text"
-          placeholder="Enter OTP"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          required
-        />
-      </div>
-    </>
-  )}
+            {step === 2 && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Enter OTP
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter OTP"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
+            )}
 
-  {step === 3 && (
-    <>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-        <input
-          type="password"
-          placeholder="Enter new password"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-        <input
-          type="password"
-          placeholder="Re-enter password"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-      </div>
-    </>
-  )}
+            {step === 3 && (
+              <>
+              <div className="relative">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  New Password
+                </label>
+                <input
+                  type={showNew ? "text" : "password"}
+                  placeholder="Enter new password"
+                  className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowNew((prev) => !prev)}
+                  className="absolute right-3 top-9 cursor-pointer text-gray-500"
+                >
+                  {showNew ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                </span>
+              </div>
+        
+              <div className="relative mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password
+                </label>
+                <input
+                  type={showConfirm ? "text" : "password"}
+                  placeholder="Re-enter password"
+                  className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowConfirm((prev) => !prev)}
+                  className="absolute right-3 top-9 cursor-pointer text-gray-500"
+                >
+                  {showConfirm ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                </span>
+              </div>
+            </>
+            )}
 
-  <button
-    type="submit"
-    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-  >
-    {step === 1 ? "Send OTP" : step === 2 ? "Verify OTP" : "Reset Password"}
-  </button>
-</form>
-
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              {step === 1
+                ? "Send OTP"
+                : step === 2
+                ? "Verify OTP"
+                : "Reset Password"}
+            </button>
+          </form>
 
           <p className="text-center text-sm text-gray-600 mt-4">
             Remembered your password?{" "}

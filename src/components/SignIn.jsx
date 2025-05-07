@@ -5,12 +5,15 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function SignInPage() {
   const [values, setValues] = useState({
     userid: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const Navigate = useNavigate();
 
@@ -22,17 +25,17 @@ export default function SignInPage() {
     });
 
     try {
-      const res = await axios.post("https://loan-fy-server.vercel.app/signin", {
+      const res = await axios.post("https://loan-fy-server-git-main-dhineshkumars-projects.vercel.app/signin", {
         userid: values.userid,
         password: values.password,
       });
 
       toast.dismiss(toastId);
-      console.log(res.data.userid);
+      console.log(res.data.status);
 
-      if (res.data.message === "Login successful") {
-        localStorage.setItem("userId", res.data.userid);
-        Cookies.set("userId", res.data.userid, { expires: 7 });
+      if (res.data.status === "success") {
+        localStorage.setItem("userId", values.userid);
+        Cookies.set("userId", values.userid, { expires: 7 });
 
         toast.success("Signed in successfully!", {
           style: { background: "#4ade80", color: "black" }, // green-400
@@ -98,14 +101,14 @@ export default function SignInPage() {
               />
             </div>
 
-            <div>
+            <div className="relative">
               <label className="text-sm font-medium text-gray-700 block mb-1 px-1">
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
                 onInvalid={(e) =>
                   e.target.setCustomValidity(
@@ -117,13 +120,23 @@ export default function SignInPage() {
                   setValues({ ...values, password: e.target.value })
                 }
               />
+              <span
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-9 cursor-pointer text-gray-500"
+              >
+                {showPassword ? (
+                  <AiOutlineEyeInvisible size={20} />
+                ) : (
+                  <AiOutlineEye size={20} />
+                )}
+              </span>
             </div>
 
-            {/* <div className="flex justify-center items-center text-sm text-gray-600">
+            <div className="flex justify-center items-center text-sm text-gray-600">
               <Link to="/forgotpw" className="text-blue-500 !no-underline">
                 Forgot password?
               </Link>
-            </div> */}
+            </div>
 
             <button
               type="submit"
@@ -137,19 +150,13 @@ export default function SignInPage() {
           <div className="mt-2 space-y-2 text-center text-sm text-gray-600">
             <p>
               Don’t have an account?{" "}
-              <Link
-                to="/register"
-                className="text-blue-600 font-medium hover:underline"
-              >
+              <Link to="/register" className="text-blue-600 hover:underline">
                 Create one here
               </Link>
             </p>
             <p>
               Are you an admin?{" "}
-              <Link
-                to="/adminlogin"
-                className="text-blue-600 font-medium hover:underline"
-              >
+              <Link to="/adminlogin" className="text-blue-600 hover:underline">
                 Login as Admin
               </Link>
             </p>
